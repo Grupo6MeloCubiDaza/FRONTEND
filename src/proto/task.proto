@@ -1,15 +1,22 @@
 syntax = "proto3";
 
 service TaskService {
-  rpc CreateTask (TaskRequest) returns (TaskResponse);
-  rpc ListTasks (Empty) returns (TaskListResponse);
-  rpc UpdateTask (TaskRequest) returns (TaskResponse);  // Agregar actualización de tarea
-  rpc DeleteTask (TaskRequest) returns (TaskResponse);  // Agregar eliminación de tarea
+  rpc CreateTask(TaskRequest) returns (TaskResponse);
+  rpc ListTasks(Empty) returns (TaskListResponse);
+  rpc UpdateTask(TaskRequest) returns (TaskResponse);
+  rpc DeleteTask(TaskRequest) returns (TaskResponse);
+}
+
+message Task {
+  int32 id = 1; // Aquí defines el ID de la tarea
+  string title = 2;
+  string description = 3;
 }
 
 message TaskRequest {
-  string title = 1;
-  string description = 2;
+  int32 id = 1; // Aquí defines el ID de la tarea en el request
+  string title = 2;
+  string description = 3;
 }
 
 message TaskResponse {
@@ -18,11 +25,6 @@ message TaskResponse {
 
 message TaskListResponse {
   repeated Task tasks = 1;
-}
-
-message Task {
-  string title = 1;
-  string description = 2;
 }
 
 message Empty {}

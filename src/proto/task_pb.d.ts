@@ -2,7 +2,36 @@ import * as jspb from 'google-protobuf'
 
 
 
+export class Task extends jspb.Message {
+  getId(): number;
+  setId(value: number): Task;
+
+  getTitle(): string;
+  setTitle(value: string): Task;
+
+  getDescription(): string;
+  setDescription(value: string): Task;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): Task.AsObject;
+  static toObject(includeInstance: boolean, msg: Task): Task.AsObject;
+  static serializeBinaryToWriter(message: Task, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): Task;
+  static deserializeBinaryFromReader(message: Task, reader: jspb.BinaryReader): Task;
+}
+
+export namespace Task {
+  export type AsObject = {
+    id: number,
+    title: string,
+    description: string,
+  }
+}
+
 export class TaskRequest extends jspb.Message {
+  getId(): number;
+  setId(value: number): TaskRequest;
+
   getTitle(): string;
   setTitle(value: string): TaskRequest;
 
@@ -19,6 +48,7 @@ export class TaskRequest extends jspb.Message {
 
 export namespace TaskRequest {
   export type AsObject = {
+    id: number,
     title: string,
     description: string,
   }
@@ -59,28 +89,6 @@ export class TaskListResponse extends jspb.Message {
 export namespace TaskListResponse {
   export type AsObject = {
     tasksList: Array<Task.AsObject>,
-  }
-}
-
-export class Task extends jspb.Message {
-  getTitle(): string;
-  setTitle(value: string): Task;
-
-  getDescription(): string;
-  setDescription(value: string): Task;
-
-  serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): Task.AsObject;
-  static toObject(includeInstance: boolean, msg: Task): Task.AsObject;
-  static serializeBinaryToWriter(message: Task, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): Task;
-  static deserializeBinaryFromReader(message: Task, reader: jspb.BinaryReader): Task;
-}
-
-export namespace Task {
-  export type AsObject = {
-    title: string,
-    description: string,
   }
 }
 

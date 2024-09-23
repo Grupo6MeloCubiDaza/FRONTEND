@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'preact/hooks';
 import { route } from 'preact-router';
-//import './editar-tarea.css'; // Si deseas estilos personalizados
+import { TaskController } from '../controllers/TaskController';
 
 interface EditarTareaProps {
   id: string; // Asumimos que se pasa el ID de la tarea como prop
@@ -9,27 +9,31 @@ interface EditarTareaProps {
 export function EditarTarea({ id }: EditarTareaProps) {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
+  const taskController = new TaskController();
 
   useEffect(() => {
-    // Aquí podrías obtener los datos de la tarea con el ID proporcionado
-    // Por simplicidad, usamos valores predeterminados
+    // Aquí obtenemos los datos de la tarea con el ID proporcionado usando el controlador
     const fetchData = async () => {
-      // Simulamos una llamada a una API para obtener la tarea
-      const task = { name: 'Tarea editada', description: 'Descripción editada' }; // Ejemplo
-      setName(task.name);
-      setDescription(task.description);
+      const task = await taskController.getTaskById(Number(id)); // Llama al controlador para obtener la tarea
+      if (task) {
+        setName(task.name);
+        setDescription(task.description);
+      }
     };
 
     fetchData();
   }, [id]);
 
-  const handleSave = (e: Event) => {
+  const handleSave = async (e: Event) => {
     e.preventDefault();
-    // Aquí puedes manejar la lógica para guardar los cambios de la tarea
-    console.log('Guardar tarea editada:', { id, name, description });
-
-    // Redirige a la página de bienvenida
-    route('/bienvenido');
+    // Llamada al controlador para actualizar la tarea
+    const success = await taskController.editTask(Number(id), { name, description });
+    if (success) {
+      // Redirige a la página de bienvenida si se guardan los cambios correctamente
+      route('/bienvenido');
+    } else {
+      console.error('Error al guardar la tarea');
+    }
   };
 
   return (

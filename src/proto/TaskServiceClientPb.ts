@@ -125,5 +125,91 @@ export class TaskServiceClient {
     this.methodDescriptorListTasks);
   }
 
+  methodDescriptorUpdateTask = new grpcWeb.MethodDescriptor(
+    '/TaskService/UpdateTask',
+    grpcWeb.MethodType.UNARY,
+    task_pb.TaskRequest,
+    task_pb.TaskResponse,
+    (request: task_pb.TaskRequest) => {
+      return request.serializeBinary();
+    },
+    task_pb.TaskResponse.deserializeBinary
+  );
+
+  updateTask(
+    request: task_pb.TaskRequest,
+    metadata?: grpcWeb.Metadata | null): Promise<task_pb.TaskResponse>;
+
+  updateTask(
+    request: task_pb.TaskRequest,
+    metadata: grpcWeb.Metadata | null,
+    callback: (err: grpcWeb.RpcError,
+               response: task_pb.TaskResponse) => void): grpcWeb.ClientReadableStream<task_pb.TaskResponse>;
+
+  updateTask(
+    request: task_pb.TaskRequest,
+    metadata?: grpcWeb.Metadata | null,
+    callback?: (err: grpcWeb.RpcError,
+               response: task_pb.TaskResponse) => void) {
+    if (callback !== undefined) {
+      return this.client_.rpcCall(
+        this.hostname_ +
+          '/TaskService/UpdateTask',
+        request,
+        metadata || {},
+        this.methodDescriptorUpdateTask,
+        callback);
+    }
+    return this.client_.unaryCall(
+    this.hostname_ +
+      '/TaskService/UpdateTask',
+    request,
+    metadata || {},
+    this.methodDescriptorUpdateTask);
+  }
+
+  methodDescriptorDeleteTask = new grpcWeb.MethodDescriptor(
+    '/TaskService/DeleteTask',
+    grpcWeb.MethodType.UNARY,
+    task_pb.TaskRequest,
+    task_pb.TaskResponse,
+    (request: task_pb.TaskRequest) => {
+      return request.serializeBinary();
+    },
+    task_pb.TaskResponse.deserializeBinary
+  );
+
+  deleteTask(
+    request: task_pb.TaskRequest,
+    metadata?: grpcWeb.Metadata | null): Promise<task_pb.TaskResponse>;
+
+  deleteTask(
+    request: task_pb.TaskRequest,
+    metadata: grpcWeb.Metadata | null,
+    callback: (err: grpcWeb.RpcError,
+               response: task_pb.TaskResponse) => void): grpcWeb.ClientReadableStream<task_pb.TaskResponse>;
+
+  deleteTask(
+    request: task_pb.TaskRequest,
+    metadata?: grpcWeb.Metadata | null,
+    callback?: (err: grpcWeb.RpcError,
+               response: task_pb.TaskResponse) => void) {
+    if (callback !== undefined) {
+      return this.client_.rpcCall(
+        this.hostname_ +
+          '/TaskService/DeleteTask',
+        request,
+        metadata || {},
+        this.methodDescriptorDeleteTask,
+        callback);
+    }
+    return this.client_.unaryCall(
+    this.hostname_ +
+      '/TaskService/DeleteTask',
+    request,
+    metadata || {},
+    this.methodDescriptorDeleteTask);
+  }
+
 }
 

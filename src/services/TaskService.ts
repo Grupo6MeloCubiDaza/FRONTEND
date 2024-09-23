@@ -1,83 +1,74 @@
-import { TaskServiceClient } from './proto/TaskServiceClientPb'; // Importa tu cliente gRPC
-import { TaskRequest, TaskResponse, Empty } from './proto/task_pb'; // Importa los mensajes correspondientes
+import { TaskServiceClient } from '../proto/TaskServiceClientPb'; // Importa tu cliente gRPC
+import { Empty, TaskRequest } from '../proto/task_pb'; // Importa los mensajes proto
 
 export class TaskService {
-  private client: TaskServiceClient;
-
-  constructor() {
-    this.client = new TaskServiceClient('http://localhost:8080'); // Cambia la URL si es necesario
-  }
+  private client = new TaskServiceClient('http://localhost:8000'); // Configura el cliente
 
   async fetchAllTasks() {
-    return new Promise((resolve, reject) => {
-      const request = new Empty();
+    const request = new Empty();
+    try {
+      const response = await this.client.listTasks(request, {});
+      return response.getTasksList().map(task => ({
+        id: task.getId(),
+        name: task.getTitle(),
+        description: task.getDescription(),
+      }));
+    } catch (error) {
+      console.error('Error fetching tasks:', error);
+      return [];
+    }
+  }
 
-      this.client.listTasks(request, {}, (err, response) => {
-        if (err) {
-          console.error('Error obteniendo las tareas:', err);
-          reject(err);
-        } else {
-          const tasks = response.getTasksList().map(task => ({
-            id: task.getId(),
-            name: task.getTitle(),
-            description: task.getDescription(),
-          }));
-          resolve(tasks);
-        }
-      });
-    });
+  async fetchTaskById(id: number) {
+    // Aquí haces la llamada gRPC o fetch al backend para obtener la tarea por ID
+    const response = await fetch(`/api/tasks/${id}`);
+    if (response.ok) {
+      return await response.json(); // Suponiendo que el backend retorna JSON
+    } else {
+      throw new Error('Error al obtener la tarea');
+    }
   }
 
   async createTask(task: { name: string; description: string }) {
-    return new Promise((resolve, reject) => {
-      const request = new TaskRequest();
-      request.setTitle(task.name);
-      request.setDescription(task.description);
+    const request = new TaskRequest();
+    request.setTitle(task.name);
+    request.setDescription(task.description);
 
-      this.client.createTask(request, {}, (err, response: TaskResponse) => {
-        if (err) {
-          console.error('Error creando tarea:', err);
-          reject(err);
-        } else {
-          resolve(response.getSuccess());
-        }
-      });
-    });
+    try {
+      const response = await this.client.createTask(request, {});
+      return response.getSuccess();
+    } catch (error) {
+      console.error('Error creating task:', error);
+      return false;
+    }
   }
 
-  // Método para actualizar una tarea
   async updateTask(id: number, task: { name: string; description: string }) {
-    return new Promise((resolve, reject) => {
-      const request = new TaskRequest();
-      request.setId(id);
-      request.setTitle(task.name);
-      request.setDescription(task.description);
+    const request = new TaskRequest();
+    request.setTitle(task.name);
+    request.setDescription(task.description);
 
-      this.client.updateTask(request, {}, (err, response: TaskResponse) => {
-        if (err) {
-          console.error(`Error actualizando tarea ${id}:`, err);
-          reject(err);
-        } else {
-          resolve(response.getSuccess());
-        }
-      });
-    });
+    try {
+      const response = await this.client.updateTask(request, {});
+      return response.getSuccess();
+    } catch (error) {
+      console.error(`Error updating task ${id}:`, error);
+      return false;
+    }
   }
 
-  // Método para eliminar una tarea
   async deleteTask(id: number) {
-    return new Promise((resolve, reject) => {
-      const request = new TaskRequest();
-      request.setId(id);
+    const request = new TaskRequest();
+    request.setId(id);
 
-      this.client.deleteTask(request, {}, (err, response: TaskResponse) => {
-        if (err) {
-          console.error(`Error eliminando tarea ${id}:`, err);
-          reject(err);
-        } else {
-          resolve(response.getSuccess());
-        }
-      });
-    });
+    try {
+      const response = await this.client.deleteTask(request, {});
+      return response.getSuccess();
+    } catch (error) {
+      console.error(`Error deleting task ${id}:`, error);
+      return false;
+    }
   }
 }
+
+  

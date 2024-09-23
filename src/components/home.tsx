@@ -2,16 +2,15 @@ import { useState, useEffect } from 'preact/hooks';
 import { route } from 'preact-router';
 import { TaskController } from '../controllers/TaskController';
 
-const taskController = new TaskController();
-
 export function Bienvenido() {
-  const [tasks, setTasks] = useState([]);
+  const [tasks, setTasks] = useState<{ id: number; name: string; description: string }[]>([]);
+  const taskController = new TaskController();
 
   useEffect(() => {
-    // Llamada al controlador para obtener las tareas al cargar la página
+    // Llamada al controlador para obtener las tareas
     const fetchTasks = async () => {
-      const result = await taskController.getAllTasks();
-      setTasks(result); // Establecer las tareas obtenidas
+      const tasksFromServer = await taskController.getAllTasks();
+      setTasks(tasksFromServer);
     };
     fetchTasks();
   }, []);
@@ -21,7 +20,7 @@ export function Bienvenido() {
   };
 
   const handleDelete = async (id: number) => {
-    await taskController.deleteTask(id);
+    await taskController.deleteTask(id); // Llama al controlador para eliminar
     setTasks(tasks.filter(task => task.id !== id));
   };
 

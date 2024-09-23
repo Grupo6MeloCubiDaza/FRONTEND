@@ -1,18 +1,22 @@
 import { useState } from 'preact/hooks';
 import { route } from 'preact-router';
-//import './agregar-tarea.css'; // Si deseas estilos personalizados
+import { TaskController } from '../controllers/TaskController'; // Importa el controlador
 
 export function AgregarTarea() {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
+  const taskController = new TaskController();
 
-  const handleSave = (e: Event) => {
+  const handleSave = async (e: Event) => {
     e.preventDefault();
-    // Aquí puedes manejar la lógica para guardar la nueva tarea
-    console.log('Guardar tarea:', { name, description });
-
-    // Redirige a la página de bienvenida
-    route('/bienvenido');
+    // Llamada al controlador para agregar una nueva tarea
+    const success = await taskController.addTask({ name, description });
+    if (success) {
+      // Redirige a la página de bienvenida si se guarda correctamente
+      route('/bienvenido');
+    } else {
+      console.error('Error al agregar la tarea');
+    }
   };
 
   return (
@@ -41,3 +45,4 @@ export function AgregarTarea() {
     </div>
   );
 }
+
