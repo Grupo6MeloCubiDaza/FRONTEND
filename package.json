@@ -9,6 +9,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "google-protobuf": "^3.21.4",
+    "grpc-web": "^1.5.0",
     "preact": "^10.23.1",
     "preact-router": "^4.1.2"
   },
