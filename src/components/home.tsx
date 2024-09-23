@@ -1,20 +1,28 @@
-import { useState } from 'preact/hooks';
-import { route } from 'preact-router'; // Importa la función de redirección
-//import './bienvenido.css';
+import { useState, useEffect } from 'preact/hooks';
+import { route } from 'preact-router';
+import { TaskController } from '../controllers/TaskController';
+
+const taskController = new TaskController();
 
 export function Bienvenido() {
-  const [tasks, setTasks] = useState([
-    { id: 1, name: 'Tarea 1', description: 'Descripción de tarea 1' },
-    { id: 2, name: 'Tarea 2', description: 'Descripción de tarea 2' },
-  ]);
+  const [tasks, setTasks] = useState([]);
+
+  useEffect(() => {
+    // Llamada al controlador para obtener las tareas al cargar la página
+    const fetchTasks = async () => {
+      const result = await taskController.getAllTasks();
+      setTasks(result); // Establecer las tareas obtenidas
+    };
+    fetchTasks();
+  }, []);
 
   const handleEdit = (id: number) => {
     route(`/editar-tarea/${id}`);
   };
 
-  const handleDelete = (id: number) => {
+  const handleDelete = async (id: number) => {
+    await taskController.deleteTask(id);
     setTasks(tasks.filter(task => task.id !== id));
-    console.log('Borrar tarea con ID:', id);
   };
 
   const handleAdd = () => {
@@ -26,9 +34,8 @@ export function Bienvenido() {
   };
 
   const handleDeleteAccount = () => {
-    // Aquí puedes agregar la lógica para eliminar la cuenta
     console.log('Eliminar cuenta');
-    route('/'); 
+    route('/');
   };
 
   return (
@@ -67,5 +74,6 @@ export function Bienvenido() {
     </div>
   );
 }
+
 
 

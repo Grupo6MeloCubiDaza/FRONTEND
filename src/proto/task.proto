@@ -3,6 +3,8 @@ syntax = "proto3";
 service TaskService {
   rpc CreateTask (TaskRequest) returns (TaskResponse);
   rpc ListTasks (Empty) returns (TaskListResponse);
+  rpc UpdateTask (TaskRequest) returns (TaskResponse);  // Agregar actualización de tarea
+  rpc DeleteTask (TaskRequest) returns (TaskResponse);  // Agregar eliminación de tarea
 }
 
 message TaskRequest {

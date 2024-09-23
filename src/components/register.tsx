@@ -1,17 +1,25 @@
 import { useState } from 'preact/hooks';
-import { route } from 'preact-router'; 
-//import './register.css'; // Si deseas estilos personalizados
+import { route } from 'preact-router';
+import { UserController } from '../controllers/UserController';
 
 export function Register() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const userController = new UserController();
 
-  const handleSubmit = (e: Event) => {
+  const handleSubmit = async (e: Event) => {
     e.preventDefault();
-    // Aquí puedes manejar el registro, por ejemplo, enviarlo a un servidor
-    console.log('Registro:', { name, email, password });
-    route('/bienvenido');
+    try {
+      const success = await userController.registerUser({ name, email, password });
+      if (success) {
+        route('/bienvenido');
+      } else {
+        alert('Registro fallido');
+      }
+    } catch (error) {
+      console.error('Error en el registro:', error);
+    }
   };
 
   return (

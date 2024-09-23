@@ -1,16 +1,24 @@
 import { useState } from 'preact/hooks';
 import { route } from 'preact-router';
-//import './login.css'; // Si deseas estilos personalizados
+import { UserController } from '../controllers/UserController';
 
 export function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const userController = new UserController();
 
-  const handleSubmit = (e: Event) => {
+  const handleSubmit = async (e: Event) => {
     e.preventDefault();
-    // Aquí puedes manejar el inicio de sesión, por ejemplo, enviarlo a un servidor
-    console.log('Inicio de sesión:', { email, password });
-    route('/bienvenido'); 
+    try {
+      const success = await userController.loginUser({ email, password });
+      if (success) {
+        route('/bienvenido');
+      } else {
+        alert('Inicio de sesión fallido');
+      }
+    } catch (error) {
+      console.error('Error en el inicio de sesión:', error);
+    }
   };
 
   return (
@@ -40,3 +48,4 @@ export function Login() {
     </div>
   );
 }
+

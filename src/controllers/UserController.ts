@@ -3,11 +3,12 @@ import { UserService } from '../services/UserService';
 export class UserController {
   private userService = new UserService();
 
-  editUser(user: { name: string, email: string, password: string }) {
-    return this.userService.updateUser(user);
+  async loginUser(user: { email: string, password: string }) {
+    return await this.userService.login(user);
   }
 
-  deleteUser() {
-    return this.userService.deleteAccount();
+  async registerUser(user: { name: string, email: string, password: string }) {
+    return await this.userService.register(user);
   }
 }
+
